@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>work 1: แบบทดสอบภูมิศาสตร์</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid p-5 bg-success text-white text-center">
+  <h1>แบบทดสอบภูมิศาสตร์</h1>
+  
+</div>
+  
+<div class="container p-5">
+  <div class="row" id="startBox">
+    <div class="d-flex justify-content-center mt-5">
+        <button class="btn-success btn" style="width: 150px;" id="btnStart">เริ่มทำแบบทดสอบ</button>
+    </div>       
+    <div class="text-center">
+        <img src="https://cdn-icons-png.flaticon.com/512/2240/2240692.png" class="rounded" alt="รูปโลก">
+    </div> 
+     
+  </div>
+  <div class="row" id="quizBox">
+    <div id="quizListBox"></div>
+    <button class="btn-secondary btn" id="btnCheckAnswer">ตรวจคำตอบ</button>
+  </div>
+  <div id="resultBox" class="mt-3"></div>
+
+</div>
+
+<script>
+
+  $(function(){
+    $("#quizBox").hide();
+    $("#btnStart").click(function(){
+       $("#startBox").hide();
+       $("#quizBox").show();
+       displayQuizList();
+    });
+  });
+
+  function displayQuizList(){
+    $("#quizListBox").html("<div class='p-1'>แบบทดสอบที่ 1: วัดความรู้รอบโลก</div>");
+    for(var i in quizlist){
+      displayQuiz(i,quizlist[i]);
+    }
+  }
+  
+  function displayQuiz(i,q){
+    var no=parseInt(i)+1;
+    var html = "<div class='p-3 mb-3 border rounded quiz-item'>";
+    html += "<div class='d-flex align-items-center mb-2'>";
+    html += "<div class='quiz-no me-2'>ข้อที่: " + no + ".</div>";
+    html += "<div class='quiz-title flex-grow-1'>" + q.title + "</div>";
+    html += "</div>";
+
+    for (var c in q.options) {
+        var v = parseInt(c) + 1;
+        html += "<div class='alert alert-secondary'>";
+        html += "<input type='radio' name='q" + no + "' value='" + v + "'> " + v + ") ";
+        html += q.options[c] + "</div>";
+    }
+    html += "</div>";
+    $("#quizListBox").append(html);
+
+    $("#btnCheckAnswer").click(function() {
+        let score = 0;
+        quizlist.forEach((q, index) => {
+            const selectedOption = $(`input[name='q${index + 1}']:checked`).val();
+            if (selectedOption === q.answer) {
+            score++;
+            }
+        });
+        displayResult(score);
+        });
+
+        function displayResult(score) {
+        const totalQuestions = quizlist.length;
+        let message = `<h4 class='text-center text-success'>คุณได้ ${score} คะแนน จาก ${totalQuestions} <img src="https://cdn-icons-png.flaticon.com/512/742/742751.png" class="rounded" alt="smile" style="width: 1.5em; vertical-align: middle;"></h4>`;
+        $("#resultBox").html(message);
+        }
+}
+
+var quizlist = [
+    {
+        "title": "เมืองหลวงของประเทศญี่ปุ่นคือเมืองใด?",
+        "options":["โอซาก้า", "โตเกียว", "เกียวโต", "ซัปโปโร"],
+        "answer": "2"
+    },
+    {
+        "title": "ประเทศใดมีประชากรมากที่สุดในโลก?",
+        "options":["อินเดีย", "จีน", "สหรัฐอเมริกา", "รัสเซีย"],
+        "answer": "2"
+    },
+    {
+        "title": "ประเทศใดในยุโรปมีพื้นที่ใหญ่ที่สุด?",
+        "options":["ฝรั่งเศส", "เยอรมนี", "รัสเซีย", "สเปน"],
+        "answer": "3"
+    },
+    {
+        "title": "ธงชาติของประเทศออสเตรเลียมีสัญลักษณ์อะไร?",
+        "options":["แกะ", "จิงโจ้", "ดาว", "นกอีมู"],
+        "answer": "3"
+    },
+    {
+        "title": "ประเทศใดเรียกอีกชื่อว่า 'ดินแดนแห่งกังหันลม' ?",
+        "options":["นอร์เวย์", "สวีเดน", "เดนมาร์ก", "เนเธอร์แลนด์"],
+        "answer": "4"
+    },
+    {
+        "title": "ภูเขาไฟฟูจิอยู่ในประเทศใด?",
+        "options":["จีน", "ญี่ปุ่น", "เกาหลีใต้", "ฟิลิปปินส์"],
+        "answer": "2"
+    },
+    {
+        "title": "ทะเลสาบไบคาลตั้งอยู่ในประเทศใด?",
+        "options":["คาซัคสถาน", "มองโกเลีย", "รัสเซีย", "แคนาดา"],
+        "answer": "3"
+    },
+    {
+        "title": "ประเทศใดมีรูปทรงคล้ายรองเท้าบู๊ท?",
+        "options":["กรีซ", "อิตาลี", "สเปน", "โปรตุเกส"],
+        "answer": "2"
+    },
+    {
+        "title": "ประเทศใดที่มีนครวาติกันตั้งอยู่?",
+        "options":["ฝรั่งเศส", "สเปน", "อิตาลี", "เยอรมนี"],
+        "answer": "3"
+    },
+    {
+        "title": "ประเทศใดเป็นต้นกำเนิดของพิซซ่า?",
+        "options":["กรีซ", "ฝรั่งเศส", "อิตาลี", "ตุรกี"],
+        "answer": "3"
+    },
+    {
+        "title": "เมืองใดเป็นเมืองหลวงของอียิปต์?",
+        "options":["ไคโร", "อเล็กซานเดรีย", "ลักซอร์", "กีซ่า"],
+        "answer": "1"
+    },
+    {
+        "title": "ประเทศใดไม่ได้อยู่ในทวีปอเมริกาใต้?",
+        "options":["อาร์เจนตินา", "ชิลี", "คิวบา", "เปรู"],
+        "answer": "3"
+    },
+    {
+        "title": "ประเทศใดใช้ภาษาอังกฤษเป็นภาษาราชการ?",
+        "options":["ฝรั่งเศส", "แคนาดา", "เยอรมนี", "ญี่ปุ่น"],
+        "answer": "2"
+    },
+    {
+        "title": "ประเทศใดเป็นเจ้าภาพโอลิมปิกปี 2024?",
+        "options":["ญี่ปุ่น", "สหรัฐอเมริกา", "ฝรั่งเศส", "บราซิล"],
+        "answer": "3"
+    },
+    {
+        "title": "ประเทศใดอยู่ในภูมิภาคตะวันออกกลาง?",
+        "options":["ไทย", "อิหร่าน", "อินเดีย", "อินโดนีเซีย"],
+        "answer": "2"
+    },
+    {
+        "title": "ภูเขาเอเวอเรสต์ตั้งอยู่ในประเทศใด?",
+        "options":["อินเดีย", "เนปาล", "จีน", "ปากีสถาน"],
+        "answer": "2"
+    },
+    {
+        "title": "ประเทศใดเป็นที่รู้จักในชื่อ 'แดนปลาดิบ'?",
+        "options":["จีน", "เกาหลีใต้", "ญี่ปุ่น", "ไต้หวัน"],
+        "answer": "3"
+    },
+    {
+        "title": "ประเทศที่มีประชากรพูดภาษาสเปนมากที่สุดคือ?",
+        "options":["สเปน", "เม็กซิโก", "โคลอมเบีย", "อาร์เจนตินา"],
+        "answer": "2"
+    },
+    {
+        "title": "เมืองหลวงของประเทศเกาหลีใต้คือเมืองใด?",
+        "options":["โซล", "ปูซาน", "แทกู", "อินชอน"],
+        "answer": "1"
+    },
+    {
+        "title": "ประเทศที่มีเกาะเยอะที่สุดในโลกคือ?",
+        "options":["ฟิลิปปินส์", "นอร์เวย์", "สวีเดน", "อินโดนีเซีย"],
+        "answer": "3"
+    }
+];
+
+</script>
+</body>
+</html>

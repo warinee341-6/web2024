@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+      
+      .noto-sans-thai {
+        font-family: "Noto Sans Thai", serif;
+        font-weight: 400; 
+        font-style: normal;
+        font-variation-settings: "wdth" 100; 
+      }
+
+      body {
+        background-color: #f7f7f7;
+        font-family: 'Roboto', sans-serif;
+        color: #333;
+      }
+
+      .card {
+        border-radius: 15px;
+        margin: 20px auto;
+        max-width: 800px;
+        background-color: #ffffff;
+      }
+
+      .card-header {
+        background-color: #007bff;
+        color: white;
+        text-align: center;
+        padding: 10px;
+      }
+
+      .card-footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+        font-size: 0.9em;
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 1.1em;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin: 10px 0;
+        display: block;
+        width: 100%;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+      }
+
+      .card-body {
+        padding: 20px;
+      }
+
+      .alert {
+        margin-top: 15px;
+      }
+
+      .question-block {
+        margin-bottom: 15px;
+      }
+
+      .radio-option {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        padding-left: 20px; 
+      }
+
+      .radio-option input {
+        margin-right: 10px; 
+      }
+
+
+      button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 1.1em;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #218838;
+      }
+
+      .score-container {
+        text-align: center; 
+        margin-top: 20px; 
+      }
+
+      .score-text {
+        margin-bottom: 20px; 
+        font-size: 1.5em;
+      }
+
+      .button-agree {
+        padding: 10px 20px;
+        font-size: 1.1em; 
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="myapp" class="container p-4"></div>
+
+    <script type="text/babel">
+      const { Button, Alert } = ReactBootstrap;
+
+      class App extends React.Component {
+        title = <div className="noto-sans-thai"><h4>แบบทดสอบวิชาดาราศาสตร์ ด้วย ReactJS</h4></div>;
+        footer = <div className="noto-sans-thai">By 653380341-6  Warinee Anusurean <br/> College of Computing, Khon Kaen University </div>;
+
+        state = {
+          qlist: [],
+          status: 0,
+          answers: {},
+          score: 0,
+          errorMessage: '', 
+        };
+
+        constructor() {
+          super();
+          this.load_data();
+        }
+
+        async load_data() {
+          const res = await fetch("quiz3.json"); 
+          const data = await res.json();
+          this.setState({ qlist: data });
+        }
+
+        checkAnswer() {
+          const allAnswered = this.state.qlist.every((q, i) => this.state.answers["q" + i]);
+          if (!allAnswered) {
+            this.setState({ errorMessage: 'กรุณาเลือกคำตอบให้ครบทุกข้อก่อนทำการตรวจสอบ' });
+            return;
+          }
+
+          let score = 0;
+
+          this.state.qlist.forEach((q, i) => {
+            const selectedAnswer = this.state.answers["q" + i]; 
+            const correctAnswer = q.options[parseInt(q.answer) - 1]; 
+
+            if (selectedAnswer === correctAnswer) {
+              score += 1;
+            }
+          });
+
+          this.setState({ status: 2, score: score, errorMessage: '' });
+        }
+
+        render() {
+          var p = <Menu app={this} />;
+          if (this.state.status === 1) {
+            p = <QList list={this.state.qlist} app={this} />;
+          }
+          if (this.state.status === 2) {
+            p = <ShowScore app={this} />;
+          }
+
+          return (
+            <div className="card">
+              <div className="card-header">{this.title}</div>
+              <div className="card-body">{p}</div>
+              <div className="card-footer">{this.footer}</div>
+            </div>
+          );
+        }
+      }
+
+      function Menu(props) {
+        return (
+          <div className="noto-sans-thai">
+            <Button variant="primary" onClick={() => props.app.setState({ status: 1 })}>
+              เริ่มทำแบบทดสอบ
+            </Button>
+          </div>
+        );
+      }
+
+      function QList(props) {
+        return (
+          <div className="noto-sans-thai">
+            <div>{props.list.map((q, i) => <div key={i}><QBlock q={q} i={i} app={props.app} /></div>)}</div>
+            {props.app.state.errorMessage && <Alert variant="danger">{props.app.state.errorMessage}</Alert>}
+
+            <div className="noto-sans-thai">
+              <button onClick={() => props.app.checkAnswer()}>ตรวจคำตอบ</button>
+            </div>
+          </div>
+        );
+      }
+
+      function QBlock({ q, i, app }) {
+        return (
+          <div className="question-block">
+            <div className="noto-sans-thai"><b>ข้อที่ {i + 1}: {q.title}</b></div>
+            {q.options.map((opt, index) => (
+              <div key={index} className="radio-option">
+                <input
+                  type="radio"
+                  name={"q" + i}
+                  value={opt}
+                  onChange={() => app.setState(prevState => {
+                    const newAnswers = { ...prevState.answers };
+                    newAnswers["q" + i] = opt;
+                    return { answers: newAnswers };
+                  })}
+                />
+                {opt}
+              </div>
+            ))}
+          </div>
+        );
+      }
+
+
+
+      function ShowScore({ app }) {
+        return (
+          <div className="noto-sans-thai score-container">
+            <div className="score-text">
+              คุณได้ {app.state.score} คะแนน
+            </div>
+            <button
+              onClick={() => app.setState({ status: 0 })}
+              className="button-agree"
+            >
+              กลับไปหน้าหลัก
+            </button>
+          </div>
+        );
+      }
+
+
+      const container = document.getElementById('myapp');
+      const root = ReactDOM.createRoot(container);
+      root.render(<App />);
+    </script>
+  </body>
+</html>

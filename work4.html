@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-extras@7.5.2/dist/aframe-extras.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+        <!-- Model with animation -->
+        <a-entity gltf-model="maru.glb"  position="0 -3 -10" scale="0.8 0.8 0.8" rotation="0 0 0" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"></a-entity>
+        
+        <!-- Text entities with blinking effect -->
+        <a-entity 
+            text="value: Hello! I am Warinee Anusurean; color: #FFFFFF; align: center; font: https://cdn.aframe.io/fonts/Roboto-msdf.json; fontSize: 14;" 
+            position="0 3.5 -3" 
+            scale="3 3 3"
+            animation__blink="property: opacity; to: 0; dur: 500; loop: true; dir: alternate; easing: ease-in-out">
+        </a-entity>
+        
+        <a-entity 
+            text="value: My ID: 653380341-6; color: #d1f51d; align: center; font: https://cdn.aframe.io/fonts/Roboto-msdf.json; fontSize: 14;" 
+            position="0 3.2 -3" 
+            scale="3 3 3"
+            animation__blink="property: opacity; to: 0; dur: 500; loop: true; dir: alternate; easing: ease-in-out">
+        </a-entity>
+        
+        <a-entity 
+            text="value: I am a Computer Science Student.; color: #0064ff; align: center; font: https://cdn.aframe.io/fonts/Roboto-msdf.json; fontSize: 14;" 
+            position="0 2.9 -3" 
+            scale="3 3 3"
+            animation__blink="property: opacity; to: 0; dur: 500; loop: true; dir: alternate; easing: ease-in-out">
+        </a-entity>
+        
+        <!-- Sky with an image -->
+        <a-sky color="#FFFFFF" src="jose-g-ortega-castro-PYpkPbBCNFw-unsplash.jpg"></a-sky>
+    </a-scene>
+  </body>
+</html>
+
